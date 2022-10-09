@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use SaltLaravel\Models\Resources;
 use Illuminate\Support\Facades\Schema;
 use SaltLaravel\Traits\ObservableModel;
 use SaltLaravel\Traits\Uuids;
