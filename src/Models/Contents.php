@@ -54,7 +54,6 @@ class Contents extends Resources {
         'slug' => 'nullable|string',
         "content" => 'required|string',
         'excerpt' => 'nullable|string',
-        'content' => 'required|string',
         "type" => 'nullable|string',
         'visibility' => 'nullable|string',
         'publish_type' => 'nullable|string',
