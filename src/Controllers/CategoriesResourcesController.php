@@ -4,6 +4,8 @@ namespace SaltCMS\Controllers;
 
 use OpenApi\Annotations as OA;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use SaltLaravel\Controllers\Controller;
 use SaltLaravel\Controllers\Traits\ResourceIndexable;
 use SaltLaravel\Controllers\Traits\ResourceStorable;
