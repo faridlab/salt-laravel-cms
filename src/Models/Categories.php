@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Schema;
 use SaltLaravel\Models\Resources;
 use SaltLaravel\Traits\ObservableModel;
 use SaltLaravel\Traits\Uuids;
+use SaltCMS\Traits\KeySluggable;
 
 class Categories extends Resources {
     protected $table = 'sysparams';
 
     use Uuids;
     use ObservableModel;
+    use KeySluggable;
     protected $filters = [
         'default',
         'search',
@@ -40,7 +42,7 @@ class Categories extends Resources {
     protected $rules = array(
         // 'group' => 'required|string|in:post_category',
         'group' => 'nullable|string',
-        'key' => 'required|string', // TODO: create sluggable observer or service itself
+        'key' => 'nullable|string', // TODO: create sluggable observer or service itself
         'value' => 'required|string',
         'data' => 'nullable|array',
         'order' => 'nullable|integer',
