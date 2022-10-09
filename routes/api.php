@@ -65,16 +65,16 @@ Route::middleware(['api'])
 
 
     // API: CONTENTS RESOURCES
-    Route::get("contents/tags", [ContentsResourcesController::class, 'index']); // get entire collection
-    Route::post("contents/tags", [ContentsResourcesController::class, 'store']); // create new collection
+    Route::get("contents", [ContentsResourcesController::class, 'index']); // get entire collection
+    Route::post("contents", [ContentsResourcesController::class, 'store']); // create new collection
 
-    Route::get("contents/tags/trash", [ContentsResourcesController::class, 'trash']); // trash of collection
+    Route::get("contents/trash", [ContentsResourcesController::class, 'trash']); // trash of collection
 
-    Route::post("contents/tags/import", [ContentsResourcesController::class, 'import']); // import collection from external
-    Route::post("contents/tags/export", [ContentsResourcesController::class, 'export']); // export entire collection
-    Route::get("contents/tags/report", [ContentsResourcesController::class, 'report']); // report collection
+    Route::post("contents/import", [ContentsResourcesController::class, 'import']); // import collection from external
+    Route::post("contents/export", [ContentsResourcesController::class, 'export']); // export entire collection
+    Route::get("contents/report", [ContentsResourcesController::class, 'report']); // report collection
 
-    Route::get("contents/tags/{id}/trashed", [ContentsResourcesController::class, 'trashed'])->where('id', '[a-zA-Z0-9-]+'); // get collection by ID from trash
+    Route::get("contents/{id}/trashed", [ContentsResourcesController::class, 'trashed'])->where('id', '[a-zA-Z0-9-]+'); // get collection by ID from trash
 
     // RESTORE data by ID (id), selected IDs (selected), and All data (all)
     Route::post("contents/{id}/restore", [ContentsResourcesController::class, 'restore'])->where('id', '[a-zA-Z0-9-]+'); // restore collection by ID
