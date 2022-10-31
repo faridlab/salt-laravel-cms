@@ -10,7 +10,7 @@ use SaltCMS\Controllers\TagsResourcesController;
 
 $version = config('app.API_VERSION', 'v1');
 
-Route::middleware(['api'])
+Route::middleware(['api', 'auth:api'])
     ->prefix("api/{$version}")
     ->group(function () {
 
@@ -88,8 +88,14 @@ Route::middleware(['api'])
     // DESTROY data by ID (id), selected IDs (selected), and All data (all)
     Route::delete("contents/{id}", [ContentsResourcesController::class, 'destroy'])->where('id', '[a-zA-Z0-9-]+'); // soft delete a collection by ID
 
+    Route::post("contents/{id}/categories", [ContentsResourcesController::class, 'storeCategories'])->where('id', '[a-zA-Z0-9-]+'); // restore collection by ID
+    Route::delete("contents/{content_id}/categories/{id}", [ContentsResourcesController::class, 'destroyCategory'])->where('id', '[a-zA-Z0-9-]+'); // restore collection by ID
+
+    Route::post("contents/{id}/tags", [ContentsResourcesController::class, 'storeTags'])->where('id', '[a-zA-Z0-9-]+'); // restore collection by ID
+    Route::delete("contents/{content_id}/tags/{id}", [ContentsResourcesController::class, 'destroyTag'])->where('id', '[a-zA-Z0-9-]+'); // restore collection by ID
+
     // FIXME: nested routes need to be tested further
-    Route::resource('contents.categories', ApiNestedResourcesController::class);
-    Route::resource('contents.tags', ApiNestedResourcesController::class);
+    // Route::resource('contents.categories', ApiNestedResourcesController::class);
+    // Route::resource('contents.tags', ApiNestedResourcesController::class);
 
 });
