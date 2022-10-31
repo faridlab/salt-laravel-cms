@@ -139,5 +139,42 @@ class ContentsResourcesController extends Controller
         }
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeTags($id, Request $request, ContentTags $model)
+    {
+        $this->checkModelAuthorization('store', 'create');
+        try {
+            $request->merge([
+                'content_id' => $id,
+            ]);
+            $validator = $model->validator($request);
+            if ($validator->fails()) {
+                $this->responder->set('errors', $validator->errors());
+                $this->responder->set('message', $validator->errors()->first());
+                $this->responder->setStatus(400, 'Bad Request.');
+                return $this->responder->response();
+            }
+            $fields = $request->only($model->getTableFields());
+            foreach ($fields as $key => $value) {
+                $model->setAttribute($key, $value);
+            }
+            $model->save();
+            $this->responder->set('message', Str::title(Str::singular($this->table_name)).' created!');
+            $this->responder->set('data', $model);
+            $this->responder->setStatus(201, 'Created.');
+            return $this->responder->response();
+        } catch (\Exception $e) {
+            $this->responder->set('message', $e->getMessage());
+            $this->responder->setStatus(500, 'Internal server error.');
+            return $this->responder->response();
+        }
+    }
+
 }
 
