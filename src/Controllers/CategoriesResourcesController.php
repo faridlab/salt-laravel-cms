@@ -7,7 +7,7 @@ use OpenApi\Annotations as OA;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use SaltLaravel\Controllers\Controller;
-use SaltLaravel\Controllers\Traits\ResourceIndexable;
+// use SaltLaravel\Controllers\Traits\ResourceIndexable;
 use SaltLaravel\Controllers\Traits\ResourceStorable;
 use SaltLaravel\Controllers\Traits\ResourceShowable;
 use SaltLaravel\Controllers\Traits\ResourceUpdatable;
@@ -90,7 +90,61 @@ class CategoriesResourcesController extends Controller
      *      @OA\Response(response="default", description="Welcome page")
      * )
      */
-    use ResourceIndexable;
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request) {
+
+        $this->checkModelAuthorization('index', 'read');
+
+        try {
+
+            $count = $this->model->where('group', 'post_category')->count();
+            $model = $this->model->where('group', 'post_category')->filter();
+
+            $format = $request->get('format', 'default');
+
+            $limit = intval($request->get('limit', 25));
+            if($limit > 100) {
+                $limit = 100;
+            }
+
+            $p = intval($request->get('page', 1));
+            $page = ($p > 0 ? $p - 1: $p);
+
+            if($format == 'datatable') {
+                $draw = $request['draw'];
+            }
+
+            $modelCount = clone $model;
+            $meta = array(
+                'recordsTotal' => $count,
+                'recordsFiltered' => $modelCount->count()?: $count
+            );
+
+            $data = $model
+                        ->offset($page * $limit)
+                        ->limit($limit)
+                        ->get();
+
+            $this->responder->set('message', 'Data retrieved.');
+            $this->responder->set('meta', $meta);
+            $this->responder->set('data', $data);
+            if($format == 'datatable') {
+                $this->responder->set('draw', $draw);
+                $this->responder->set('recordsFiltered', $meta['recordsFiltered']);
+                $this->responder->set('recordsTotal', $meta['recordsTotal']);
+            }
+            return $this->responder->response();
+        } catch(\Exception $e) {
+            $this->responder->set('message', $e->getMessage());
+            $this->responder->setStatus(500, 'Internal server error.');
+            return $this->responder->response();
+        }
+    }
 
     use ResourceStorable;
     use ResourceShowable;
