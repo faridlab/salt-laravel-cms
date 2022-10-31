@@ -110,5 +110,34 @@ class ContentsResourcesController extends Controller
         }
     }
 
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyCategory(Request $request, ContentCategories $model, $contentId, $id)
+    {
+        $this->checkModelAuthorization('destroy', 'destroy');
+
+        try {
+            $category = $model->where('content_id', $contentId)->where('category_id', $id)->first();
+            if(is_null($category)) {
+                $this->responder->set('message', 'Data not found');
+                $this->responder->setStatus(404, 'Not Found');
+                return $this->responder->response();
+            }
+            $category->delete();
+            $this->responder->set('message', 'Data deleted');
+            $this->responder->set('data', $category);
+            return $this->responder->response();
+        } catch (\Exception $e) {
+            $this->responder->set('message', $e->getMessage());
+            $this->responder->setStatus(500, 'Internal server error.');
+            return $this->responder->response();
+        }
+    }
+
 }
 
