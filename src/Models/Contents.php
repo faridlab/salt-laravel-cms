@@ -14,6 +14,11 @@ use SaltLaravel\Traits\ObservableModel;
 use SaltLaravel\Traits\Uuids;
 use SaltCMS\Traits\ContentSluggable;
 
+use SaltCMS\Models\Categories;
+use SaltCMS\Models\ContentCategories;
+use SaltCMS\Models\Tags;
+use SaltCMS\Models\ContentTags;
+
 class Contents extends Resources {
     use Uuids;
     use ObservableModel;
@@ -119,15 +124,23 @@ class Contents extends Resources {
     }
 
     public function categories() {
-        return $this->hasOne('SaltFile\Models\Files', 'foreign_id', 'id')
-                    ->where('foreign_table', 'contents')
-                    ->where('directory', 'posts/thumbnail');
+        return $this->belongsToMany(
+                Categories::class,
+                ContentCategories::class,
+                'content_id',
+                'category_id'
+            )
+            ->wherePivot('deleted_at', NULL);
     }
 
     public function tags() {
-        return $this->hasOne('SaltFile\Models\Files', 'foreign_id', 'id')
-                    ->where('foreign_table', 'contents')
-                    ->where('directory', 'posts/thumbnail');
+        return $this->belongsToMany(
+                Tags::class,
+                ContentTags::class,
+                'content_id',
+                'tag_id'
+            )
+            ->wherePivot('deleted_at', NULL);
     }
 
 }
